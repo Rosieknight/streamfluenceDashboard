@@ -1,53 +1,60 @@
 var db = require("../models");
 var request = require("request");
 
+
 module.exports = function(app) {
+
+	/*StreamFluence API*/
 		app.get("/", function(req, res) {
-				
-
-			var options = { method: 'GET',
-			  url: 'https://api.twitch.tv/kraken/channels/deyusha',
-			  qs: { client_id: 'fko5hnqrupt7b2tw6jfs93e7gn7gcu' },
-			  headers: 
-			   { 'postman-token': '1cb2bec7-b28d-789a-cb96-a67dbfc840a6',
-			     'cache-control': 'no-cache' } };
-
-			request(options, function (error, response, body) {
-			  if (error) throw new Error(error);
-
-			  console.log(body);
-			  res.render("index", {burger_data: body});
-			});
-
-
+				res.render("index");
 		});
 
 		app.get("/dashboard", function(req, res) {
 				db.InfluencerTable.findAll({}).then(function(results) {
-					res.render("index", {burger_data: results});
+					res.render("index", {influencer_data: results});
 				});
 		});
 
-	/*	app.post("/INSERT HERE", function(req, res) {
-				db.BurgersTable.create({
-					burger_name: req.body.burger_name
-				}).then(function(results) {
-						res.redirect("/burgers");
-				});
+	app.post("/api/sfapi/addchannel", function(req, res) {
+		
+		db.InfluencerTable.create({
+					name: req.body.name,
+					followers: req.body.followers,
+					createdAt: req.body.createdAt
 
 		});
+	});
 
-		app.put("/INSERT HERE", function(req, res) {
-			db.BurgersTable.update({
-				devoured: true
-			}, {
-				where: {
-					id: req.body.burger_id
-				}
-			 }).then(function(results){
-				res.redirect("/burgers");
+
+	/*TWITCH API*/
+
+	app.get("/api/twitch/channel/:channel?", function(req, res) {
+				
+		
+			var options = { method: 'GET',
+				  url: 'https://api.twitch.tv/kraken/channels/' + req.params.channel,
+				  qs: { client_id: 'fko5hnqrupt7b2tw6jfs93e7gn7gcu' },
+				  headers: 
+				   { 'postman-token': '1cb2bec7-b28d-789a-cb96-a67dbfc840a6',
+				     'cache-control': 'no-cache' } };
+
+			request(options, function (error, response, body) {
+			  if (error) throw new Error(error);
+			  	console.log("This user is not active...");
+
+			  var info = JSON.parse(body);
+
+				 $.ajax({
+	          		method: "GET"
+	        	}).done(function(response) {
+	        		post("/api/sfapi/addchannel", {body}).success(res.console.log("Database updated"));
+
+				  res.json(info.name + " , " + info.followers + " , " + info.views + " , " 
+				  	+ info.language + " , " + info.url + " , " +  info._id + " , " + info.logo + " , " + info.game);
+	        	});
+		
 			});
-		});
-	*/
-};
+	});
+
+}
 
