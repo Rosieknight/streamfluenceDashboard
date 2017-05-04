@@ -1,13 +1,30 @@
 var db = require("../models");
+var request = require("request");
 
 module.exports = function(app) {
 		app.get("/", function(req, res) {
-				res.render("index");
+				
+
+			var options = { method: 'GET',
+			  url: 'https://api.twitch.tv/kraken/channels/deyusha',
+			  qs: { client_id: 'fko5hnqrupt7b2tw6jfs93e7gn7gcu' },
+			  headers: 
+			   { 'postman-token': '1cb2bec7-b28d-789a-cb96-a67dbfc840a6',
+			     'cache-control': 'no-cache' } };
+
+			request(options, function (error, response, body) {
+			  if (error) throw new Error(error);
+
+			  console.log(body);
+			  res.render("index", {burger_data: body});
+			});
+
+
 		});
 
 		app.get("/dashboard", function(req, res) {
 				db.InfluencerTable.findAll({}).then(function(results) {
-					res.render("index", {burger_data: results})
+					res.render("index", {burger_data: results});
 				});
 		});
 
@@ -33,3 +50,4 @@ module.exports = function(app) {
 		});
 	*/
 };
+
