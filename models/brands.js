@@ -30,6 +30,9 @@ module.exports = function(sequelize, DataTypes){
 							through: "brand_influencers",
 							foreignKey: "influencerId"
 						});
+						Brand.hasMany(models.Employee,{
+							onDelete: "cascade"
+						});
 					}
 				}
 			} 
@@ -38,4 +41,4 @@ module.exports = function(sequelize, DataTypes){
 	//Again, need to link this table and the users table to show which users
 	//"belong" to which brands.
 	return Brand;
-}
+};
