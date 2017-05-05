@@ -1,7 +1,7 @@
 //Sends the Users table where it needs to go.
 module.exports = function(sequelize, DataTypes){
-	var Influencer = sequelize.define("influencer"{
-		influencer_name: {
+	var User = sequelize.define("user"{
+		user_name: {
 			type: DataTypes.STRING,
 			validate: {
 				len: [1]
@@ -50,10 +50,19 @@ module.exports = function(sequelize, DataTypes){
 			validate: {
 				allowNull: false
 			}
+		}, //Linking the users with the brands
+			{
+				classMethods: {
+					associate: function(models){
+						User.belongsToMany(models.Brand,{
+							as: "Influencers", 
+							through: "brand_influencers",
+							foreignKey: "brandId"
+						});
+					}
+				}
+			}
 		}
-		
-	});
-	//Before we send this off, we need to add the brand(s?) that the users
-	//"belong" to/with. I need to look up multiple to multiple connections.
-	return Influencer;
+	);
+	return User;
 }
