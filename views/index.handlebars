@@ -4,12 +4,11 @@
 			<h1> StreamFluence Dashboard </h1>
 		</div>
 			<div class="row">
-			  {{#each burger_data}}
+			  {{#each influencer_data}}
 				<div class="col-xs-12 text-center">
-					<p>{{this._id}}.  Name: {{this.display_name}} <br> Followers: {{this.followers}}
+					<p>{{this.id}}  Name: {{this.name}} <br> Followers: {{this.followers}}
 					</p>
-				  		<!-- {{this.Date}} -->
-				</div>
+				</div>	
 			  {{/each}}
 			</div>
 	</div>
