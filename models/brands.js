@@ -22,13 +22,19 @@ module.exports = function(sequelize, DataTypes){
 		company_logo: {
 			type: DataTypes.STRING
 		},
-		employee_name: {
-			type: DataTypes.STRING,
-			validate: {
-				allowNull: false
-			}
-		} 
-	});
+			{
+				classMethods: {
+					associate: function(models){
+						Brand.belongsToMany(models.User,{
+							as: "Employer", 
+							through: "brand_influencers",
+							foreignKey: "influencerId"
+						});
+					}
+				}
+			} 
+		}
+	);
 	//Again, need to link this table and the users table to show which users
 	//"belong" to which brands.
 	return Brand;
